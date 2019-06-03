@@ -70,7 +70,7 @@ class MapControls extends FlareControls {
 
     double x = heroPos[0];
     double y = heroPos[1];
-    print("x " + '$x' + " |  y " + '$y');
+//    print("x " + '$x' + " |  y " + '$y');
 
 //    print("_heroAngle: " + (_heroAngle*180/pi).toString());
     return true;
