@@ -3,15 +3,18 @@ import 'dart:math';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'HeroController.dart';
 import 'MapControls.dart';
+import 'Miscalenious.dart';
 
 class Game extends StatefulWidget {
-  Game({Key key}) : super(key: key);
+  Game(this._context, {Key key}) : super(key: key);
+  BuildContext _context;
 
   @override
-  _GameState createState() => _GameState();
+  _GameState createState() => _GameState(_context);
 }
 
 class CharacterInfo {
@@ -28,7 +31,7 @@ class CharacterInfo {
 
 class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   MapControls _mapController;
-  HeroControls _heroControler;
+  HeroAnimationController _heroControler;
   FlareActor _hero;
   FlareActor _map;
   double _angle = 0;
@@ -37,17 +40,21 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   CharacterInfo _heroSizes;
   double _heroScale = 0.75;
   double _heroWidth = 110.0;
-  double _heroHeight = 70.0;
-  double _lastCoursorX = -1.0, _lastCoursorY = -1.0;
+  double _heroHeight = 110.0;
+  double _lastCoursorX = -1.0,
+      _lastCoursorY = -1.0;
   bool _verMoveStarted = false;
   double _verMoveDist = 0.0;
-  bool _punchReady = false;
-  Punch _punsh;
+  bool _vertGestDone = false;
+  GestCommand _gestCommand;
+  BuildContext _context;
+
+  _GameState(this._context);
 
   @override
   initState() {
     super.initState();
-    _heroControler = HeroControls();
+    _heroControler = HeroAnimationController();
     _heroSizes = CharacterInfo(_heroWidth, _heroHeight, _heroScale);
     _hero = FlareActor(
       "assets/Hero.flr",
@@ -63,8 +70,14 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    _screenWidth = MediaQuery.of(context).size.width;
-    _screenHeight = MediaQuery.of(context).size.height;
+    _screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    _screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
 
     return Scaffold(
         backgroundColor: Colors.blueAccent,
@@ -83,8 +96,8 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                 child: Transform.rotate(
                   angle: _angle,
                   child: Container(
-                    margin: const EdgeInsets.all(1.0),
-                    decoration: BoxDecoration(border: Border.all()),
+//                    margin: const EdgeInsets.all(1.0),
+//                    decoration: BoxDecoration(border: Border.all()),
                     height: _heroSizes.height,
                     width: _heroSizes.width,
                     child: _hero,
@@ -100,8 +113,8 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
     print('${details.globalPosition}');
     final RenderBox box = context.findRenderObject();
     setState(() {
-    double newX = details.globalPosition.dx;
-    double newY = details.globalPosition.dy;
+      double newX = details.globalPosition.dx;
+      double newY = details.globalPosition.dy;
 
       if (_lastCoursorX != -1.0 && _lastCoursorY != -1.0) {
         if (abs(newX - _lastCoursorX) >
@@ -118,9 +131,9 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                 newX < _lastCoursorX) {
               _angle += -abs(newX - _lastCoursorX) *
                   _angleDiffRatio;
-
             }
           }
+          _mapController.heroAngle = _angle;
         } else if (_verMoveStarted ||
             abs(newX - _lastCoursorX) * 5 <
                 abs(newY - _lastCoursorY)) {
@@ -128,18 +141,22 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
           _verMoveDist += (newY - _lastCoursorY);
 
           if (abs(_verMoveDist) > 30) {
-            _punchReady = true;
+            _vertGestDone = true;
             if (_verMoveDist > 0.0) {
-              if (newX > _screenWidth/2) {
-                _punsh = Punch.RightHand;
+              if (newX > 2 * _screenWidth / 3) {
+                _gestCommand = GestCommand.RightHandPunch;
+              } else if (newX < _screenWidth / 3) {
+                _gestCommand = GestCommand.LeftHandPunch;
               } else {
-                _punsh = Punch.LeftHand;
+                _gestCommand = GestCommand.SpeedUp;
               }
             } else {
-              if (newX > _screenWidth/2) {
-                _punsh = Punch.RightFoot;
+              if (newX > 2 * _screenWidth / 3) {
+                _gestCommand = GestCommand.RightFootPunch;
+              } else if (newX < _screenWidth / 3) {
+                _gestCommand = GestCommand.LeftFootPunch;
               } else {
-                _punsh = Punch.LeftFoot;
+                _gestCommand = GestCommand.SlowDown;
               }
             }
           }
@@ -148,25 +165,32 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
 
       _lastCoursorX = newX;
       _lastCoursorY = newY;
-
-      _mapController.heroAngle = _angle;
     });
   }
 
   void onDragEnd(DragEndDetails details) {
-    _lastCoursorX != -1.0;
+    _lastCoursorX = -1.0;
     _lastCoursorY = -1.0;
     _verMoveStarted = false;
-    if (_punchReady) {
+    if (_vertGestDone) {
       _verMoveDist = 0.0;
-      _punchReady = false;
-      print(
-          "Punch >>>>>>>>>>>>>>>>>>>>>>>>   $_punsh    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    }
-  }
+      _vertGestDone = false;
 
-  void onDoubleTap(BuildContext context) {
-    _mapController.toggleStopped();
+      if (_gestCommand != GestCommand.SlowDown &&
+          _gestCommand != GestCommand.SpeedUp) {
+        Fluttertoast.showToast(
+            msg: "$_gestCommand",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIos: 1
+        );
+      }
+      if (_gestCommand == GestCommand.SlowDown) {
+        _mapController.heroSlowDown();
+      } else if (_gestCommand == GestCommand.SpeedUp) {
+        _mapController.heroSpeedUp();
+      }
+    }
   }
 
   @override
@@ -177,9 +201,4 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   double abs(double val) {
     return val >= 0 ? val : -val;
   }
-
-}
-
-enum Punch {
-  LeftHand, LeftFoot, RightHand, RightFoot
 }

@@ -3,7 +3,7 @@ import 'package:flare_dart/math/vec2d.dart';
 import 'package:flare_flutter/flare.dart';
 import 'package:flare_flutter/flare_controls.dart';
 
-class HeroControls extends FlareControls {
+class HeroAnimationController extends FlareControls {
   FlutterActorArtboard _artboard;
   ActorNode _hero;
 
