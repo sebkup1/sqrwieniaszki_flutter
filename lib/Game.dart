@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'package:sqrwieniaszki_flutter/Enemies/Enemies.dart';
 import 'HeroController.dart';
 import 'MapControls.dart';
 import 'Miscalenious.dart';
@@ -17,37 +18,20 @@ class Game extends StatefulWidget {
   _GameState createState() => _GameState(_context);
 }
 
-class CharacterInfo {
-  double width;
-  double height;
-  double scale;
-  double X, Y;
-
-  CharacterInfo(double width, double height, double this.scale) {
-    this.width = width * scale;
-    this.height = height * scale;
-  }
-}
-
 class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   MapControls _mapController;
   HeroAnimationController _heroControler;
   FlareActor _hero;
   FlareActor _map;
-  double _angle = 0;
   double _angleDiffRatio = 0.05;
   double _screenWidth, _screenHeight;
-  CharacterInfo _heroSizes;
-  double _heroScale = 0.75;
-  double _heroWidth = 110.0;
-  double _heroHeight = 110.0;
-  double _lastCoursorX = -1.0,
-      _lastCoursorY = -1.0;
+  double _lastCoursorX = -1.0, _lastCoursorY = -1.0;
   bool _verMoveStarted = false;
   double _verMoveDist = 0.0;
   bool _vertGestDone = false;
   GestCommand _gestCommand;
   BuildContext _context;
+  Globals _globals;
 
   _GameState(this._context);
 
@@ -55,12 +39,12 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   initState() {
     super.initState();
     _heroControler = HeroAnimationController();
-    _heroSizes = CharacterInfo(_heroWidth, _heroHeight, _heroScale);
     _hero = FlareActor(
       "assets/Hero.flr",
       controller: _heroControler,
     );
-    _mapController = MapControls(_angle, _hero, _heroSizes);
+    _mapController = MapControls();
+    _mapController.setHero(_hero);
 
     _map = FlareActor(
       "assets/map.flr",
@@ -70,14 +54,10 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    _screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    _screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    _globals = Globals();
+    _screenWidth = MediaQuery.of(context).size.width;
+    _screenHeight = MediaQuery.of(context).size.height;
+    _globals.setScreenSizes(_screenWidth, _screenHeight);
 
     return Scaffold(
         backgroundColor: Colors.blueAccent,
@@ -91,19 +71,20 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
                 child: _map,
               ),
               Positioned(
-                left: (_screenWidth / 2) - _heroSizes.width / 2,
-                top: (_screenHeight / 2) - _heroSizes.height / 2,
+                left: (_screenWidth / 2) - Globals().heroWidth / 2,
+                top: (_screenHeight / 2) - Globals().heroHeight / 2,
                 child: Transform.rotate(
-                  angle: _angle,
+                  angle: Globals().heroAngle,
                   child: Container(
 //                    margin: const EdgeInsets.all(1.0),
 //                    decoration: BoxDecoration(border: Border.all()),
-                    height: _heroSizes.height,
-                    width: _heroSizes.width,
+                    height: Globals().heroHeight,
+                    width: Globals().heroWidth,
                     child: _hero,
                   ),
                 ),
               ),
+              enemies(),
             ],
           ),
         ));
@@ -117,26 +98,19 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
       double newY = details.globalPosition.dy;
 
       if (_lastCoursorX != -1.0 && _lastCoursorY != -1.0) {
-        if (abs(newX - _lastCoursorX) >
-            2 * abs(newY - _lastCoursorY)) {
+        if (abs(newX - _lastCoursorX) > 2 * abs(newY - _lastCoursorY)) {
           _verMoveStarted = false;
           _verMoveDist = 0.0;
-          if (abs(newX - _lastCoursorX) * _angleDiffRatio <
-              pi / 8) {
-            if (newX > _screenWidth / 2 &&
-                newX > _lastCoursorX) {
-              _angle += abs(newX - _lastCoursorX) *
-                  _angleDiffRatio;
-            } else if (newX < _screenWidth / 2 &&
-                newX < _lastCoursorX) {
-              _angle += -abs(newX - _lastCoursorX) *
-                  _angleDiffRatio;
+          if (abs(newX - _lastCoursorX) * _angleDiffRatio < pi / 8) {
+            if (newX > _screenWidth / 2 && newX > _lastCoursorX) {
+              Globals().heroAngle += abs(newX - _lastCoursorX) * _angleDiffRatio;
+            } else if (newX < _screenWidth / 2 && newX < _lastCoursorX) {
+              Globals().heroAngle += -abs(newX - _lastCoursorX) * _angleDiffRatio;
             }
           }
-          _mapController.heroAngle = _angle;
+          _mapController.heroAngle = Globals().heroAngle;
         } else if (_verMoveStarted ||
-            abs(newX - _lastCoursorX) * 5 <
-                abs(newY - _lastCoursorY)) {
+            abs(newX - _lastCoursorX) * 5 < abs(newY - _lastCoursorY)) {
           _verMoveStarted = true;
           _verMoveDist += (newY - _lastCoursorY);
 
@@ -182,8 +156,7 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
             msg: "$_gestCommand",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.TOP,
-            timeInSecForIos: 1
-        );
+            timeInSecForIos: 1);
       }
       if (_gestCommand == GestCommand.SlowDown) {
         _mapController.heroSlowDown();

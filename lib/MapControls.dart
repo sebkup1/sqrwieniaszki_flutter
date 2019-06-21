@@ -10,16 +10,24 @@ import 'Game.dart';
 import 'Miscalenious.dart';
 import 'HeroController.dart';
 
+
 class MapControls extends FlareControls {
+
+  MapControls._privateConstructor();
+
+  static final MapControls _instance = MapControls._privateConstructor();
+
+  factory MapControls(){
+    return _instance;
+  }
+
   ActorNode _map;
   ActorNode _ground;
   FlutterActorArtboard _artboard;
   Vec2D heroPos;
-  double _heroAngle;
   double _lastCollisionAngle;
   double _heroSpeed;
   FlareActor _hero;
-  CharacterInfo _heroSizes;
   bool _walks = false;
   bool _stopped = false;
   List<FlutterActorShape> _obstacles;
@@ -28,10 +36,16 @@ class MapControls extends FlareControls {
   bool _conditionallyLetHimGo = false;
   FootState _heroFootState;
 
-  MapControls(double this._heroAngle, FlareActor this._hero, CharacterInfo this._heroSizes);
+  void setHero(hero) {
+    _hero = hero;
+  }
+
+  void addEnemy() {
+
+  }
 
   set heroAngle(double angle) {
-    _heroAngle = angle;
+    Globals().heroAngle = angle;
     if(heroCollidingState){
 //      Vec2D pos = Vec2D.add(Vec2D(), _map.translation,
 //          Vec2D.fromValues(-sin(angle) * _speed, cos(angle) * _speed));
@@ -40,7 +54,7 @@ class MapControls extends FlareControls {
           Vec2D(),
           heroPos,
           Vec2D.fromValues(
-              -sin(_heroAngle) * _heroSpeed, cos(_heroAngle) * _heroSpeed));
+              -sin(Globals().heroAngle) * _heroSpeed, cos(Globals().heroAngle) * _heroSpeed));
 
       double prevDist = sqrt(pow(_collidingObstacle.x - heroPos.values[0], 2)+
           pow(_collidingObstacle.y - heroPos.values[1], 2));
@@ -52,10 +66,10 @@ class MapControls extends FlareControls {
         heroCollidingState = false;
         _conditionallyLetHimGo = true;
         _map.translation = Vec2D.add(Vec2D(), _map.translation,
-            Vec2D.fromValues(-sin(_heroAngle) * _heroSpeed, cos(_heroAngle) * _heroSpeed));
+            Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed, cos(Globals().heroAngle) * _heroSpeed));
 
         heroPos = Vec2D.subtract(Vec2D(), heroPos, Vec2D.fromValues(
-                -sin(_heroAngle) * _heroSpeed, cos(_heroAngle) * _heroSpeed));
+                -sin(Globals().heroAngle) * _heroSpeed, cos(Globals().heroAngle) * _heroSpeed));
 
       } else {
 
@@ -103,15 +117,15 @@ class MapControls extends FlareControls {
       */
 
     }
-    _heroAngle = angle;
+    Globals().heroAngle = angle;
   }
 
   void _setCorrectPositions(double speed) {
     _map.translation = Vec2D.subtract(Vec2D(), _map.translation,
-        Vec2D.fromValues(-sin(_heroAngle) * speed, cos(_heroAngle) * speed));
+        Vec2D.fromValues(-sin(Globals().heroAngle) * speed, cos(Globals().heroAngle) * speed));
     heroPos = Vec2D.add(
         Vec2D(), heroPos, Vec2D.fromValues(
-            -sin(_heroAngle) * speed, cos(_heroAngle) * speed));
+            -sin(Globals().heroAngle) * speed, cos(Globals().heroAngle) * speed));
   }
 
   void toggleStopped() {
@@ -172,14 +186,14 @@ class MapControls extends FlareControls {
     if (heroCollidingState) return true;
 
     Vec2D pos = Vec2D.add(Vec2D(), _map.translation,
-        Vec2D.fromValues(-sin(_heroAngle) * _heroSpeed, cos(_heroAngle) * _heroSpeed));
+        Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed, cos(Globals().heroAngle) * _heroSpeed));
 
     if (pos[1] < (_ground.children[0] as FlutterActorRectangle).height/2 &&
         pos[1] > -(_ground.children[0] as FlutterActorRectangle).height/2 &&
         pos[0] < (_ground.children[0] as FlutterActorRectangle).width/2 &&
         pos[0] > -(_ground.children[0] as FlutterActorRectangle).width/2 &&
         (!collision(Vec2D.subtract(Vec2D(), heroPos,
-            Vec2D.fromValues(-sin(_heroAngle) * _heroSpeed, cos(_heroAngle) * _heroSpeed)))
+            Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed, cos(Globals().heroAngle) * _heroSpeed)))
             /*|| _conditionallyLetHimGo*/)) {
       _map.translation = pos;
       if (!_walks) {
@@ -188,7 +202,7 @@ class MapControls extends FlareControls {
       }
       heroPos = Vec2D.subtract(Vec2D(), heroPos,
           Vec2D.fromValues(
-              -sin(_heroAngle) * _heroSpeed, cos(_heroAngle) * _heroSpeed));
+              -sin(Globals().heroAngle) * _heroSpeed, cos(Globals().heroAngle) * _heroSpeed));
     } else {
       if (_walks) {
 //        (_hero.controller as HeroControls).play("stand");
@@ -234,25 +248,25 @@ class MapControls extends FlareControls {
       if (obst.children[0] is  FlutterActorPath) continue;
       bool Right = pos[0] >= (obst.x -
           0.5 * (obst.children[0] as FlutterActorRectangle).width -
-          abs(_heroSizes.width / 2 * cos(_heroAngle)) -
-          abs(_heroSizes.height / 2 * sin(_heroAngle)));
+          abs(Globals().heroWidth / 2 * cos(Globals().heroAngle)) -
+          abs(Globals().heroHeight / 2 * sin(Globals().heroAngle)));
       bool Left = pos[0] <= (obst.x +
           0.5 * (obst.children[0] as FlutterActorRectangle).width +
-          abs(_heroSizes.width / 2 * cos(_heroAngle)) +
-          abs(_heroSizes.height / 2 * sin(_heroAngle)));
+          abs(Globals().heroWidth / 2 * cos(Globals().heroAngle)) +
+          abs(Globals().heroHeight / 2 * sin(Globals().heroAngle)));
       bool Down = pos[1] >= (obst.y -
           0.5 * (obst.children[0] as FlutterActorRectangle).height -
-          abs(_heroSizes.height / 2 * cos(_heroAngle)) -
-          abs(_heroSizes.width / 2 * sin(_heroAngle)));
+          abs(Globals().heroHeight / 2 * cos(Globals().heroAngle)) -
+          abs(Globals().heroWidth / 2 * sin(Globals().heroAngle)));
       bool Up = pos[1] <= (obst.y +
           0.5 * (obst.children[0] as FlutterActorRectangle).height +
-          abs(_heroSizes.height / 2 * cos(_heroAngle)) +
-          abs(_heroSizes.width / 2 * sin(_heroAngle)));
+          abs(Globals().heroHeight / 2 * cos(Globals().heroAngle)) +
+          abs(Globals().heroWidth / 2 * sin(Globals().heroAngle)));
 
       if (Right && Left && Down && Up) {
           heroCollidingState = true;
           _collidingObstacle = obst;
-          _lastCollisionAngle = _heroAngle;
+          _lastCollisionAngle = Globals().heroAngle;
 //          _stopped = true;
           break;
         }
