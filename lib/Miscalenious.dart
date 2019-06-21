@@ -26,9 +26,13 @@ class CharacterInfo {
   double scale;
   double X, Y;
 
-  CharacterInfo(double width, double height, double this.scale) {
-    this.width = width * scale;
-    this.height = height * scale;
+//  CharacterInfo(double width, double height, double this.scale) {
+//    this.width = width * scale;
+//    this.height = height * scale;
+//  }
+
+  CharacterInfo(this.angle, this.X, this.Y) {
+
   }
 }
 

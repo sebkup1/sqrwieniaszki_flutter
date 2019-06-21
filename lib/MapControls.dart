@@ -6,12 +6,15 @@ import 'package:flare_flutter/flare.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'Enemies/Enemies.dart';
+import 'Enemies/EnemyController.dart';
 import 'Game.dart';
 import 'Miscalenious.dart';
 import 'HeroController.dart';
 
 
 class MapControls extends FlareControls {
+
 
   MapControls._privateConstructor();
 
@@ -35,13 +38,21 @@ class MapControls extends FlareControls {
   FlutterActorShape _collidingObstacle;
   bool _conditionallyLetHimGo = false;
   FootState _heroFootState;
+  GameState _gameState;
+  List<CharacterInfo> _enemies = new List<CharacterInfo>();
+  List<EnemyController> _enemiesContr = new List<EnemyController>();
 
   void setHero(hero) {
     _hero = hero;
   }
 
-  void addEnemy() {
+  void setGameState(gameState) {
+    _gameState = gameState;
+  }
 
+  void addEnemy(CharacterInfo enemy/*, EnemyController ec*/) {
+    _enemies.add(enemy);
+//    _enemiesContr.add(ec);
   }
 
   set heroAngle(double angle) {
@@ -120,13 +131,13 @@ class MapControls extends FlareControls {
     Globals().heroAngle = angle;
   }
 
-  void _setCorrectPositions(double speed) {
-    _map.translation = Vec2D.subtract(Vec2D(), _map.translation,
-        Vec2D.fromValues(-sin(Globals().heroAngle) * speed, cos(Globals().heroAngle) * speed));
-    heroPos = Vec2D.add(
-        Vec2D(), heroPos, Vec2D.fromValues(
-            -sin(Globals().heroAngle) * speed, cos(Globals().heroAngle) * speed));
-  }
+//  void _setCorrectPositions(double speed) {
+//    _map.translation = Vec2D.subtract(Vec2D(), _map.translation,
+//        Vec2D.fromValues(-sin(Globals().heroAngle) * speed, cos(Globals().heroAngle) * speed));
+//    heroPos = Vec2D.add(
+//        Vec2D(), heroPos, Vec2D.fromValues(
+//            -sin(Globals().heroAngle) * speed, cos(Globals().heroAngle) * speed));
+//  }
 
   void toggleStopped() {
     _stopped = !_stopped;
@@ -203,6 +214,17 @@ class MapControls extends FlareControls {
       heroPos = Vec2D.subtract(Vec2D(), heroPos,
           Vec2D.fromValues(
               -sin(Globals().heroAngle) * _heroSpeed, cos(Globals().heroAngle) * _heroSpeed));
+
+
+      Vec2D enemyPos = Vec2D.add(Vec2D(), Vec2D.fromValues(enemy.X, enemy.Y),
+          Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed/2, cos(Globals().heroAngle) * _heroSpeed/2));
+
+      enemy.X = enemyPos[0];
+      enemy.Y = enemyPos[1];
+
+      _gameState.setEnemy(enemyPos[0], enemyPos[1]);
+
+
     } else {
       if (_walks) {
 //        (_hero.controller as HeroControls).play("stand");
@@ -212,6 +234,17 @@ class MapControls extends FlareControls {
 
     double x = heroPos[0];
     double y = heroPos[1];
+
+
+
+    
+    _enemies.forEach((enemy) => () {
+    // nie dziala
+//      print("x " + '${enemyPos[0]}' + " |  y " + '${enemyPos[0]}');
+    });
+
+
+
 //    print("x " + '$x' + " |  y " + '$y');
 
 //    print("_heroAngle: " + (_heroAngle*180/pi).toString());
@@ -227,6 +260,8 @@ class MapControls extends FlareControls {
     _map = artboard.getNode("map2");
     _map.translation = Vec2D.fromValues(0, 0);
     heroPos = Vec2D.fromValues(_artboard.width/2, _artboard.height/2);
+    enemy.X = _artboard.width/2;
+    enemy.Y = _artboard.height/2;
     _obstacles = List<FlutterActorShape>();
     _heroFootState = FootState.Walk;
     _heroSpeed = 2;

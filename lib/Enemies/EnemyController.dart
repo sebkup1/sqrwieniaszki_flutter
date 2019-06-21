@@ -10,7 +10,8 @@ class EnemyController extends FlareControls {
   @override
   bool advance(FlutterActorArtboard artboard, double elapsed) {
     super.advance(artboard, elapsed);
-//    _hero.translation = Vec2D.add(Vec2D(), _hero.translation, Vec2D.fromValues(1, 1));
+//    _enemy.translation = Vec2D.add(Vec2D(), _enemy.translation, Vec2D.fromValues(1, 1));
+
     return true;
   }
 
@@ -19,7 +20,7 @@ class EnemyController extends FlareControls {
     super.initialize(artboard);
     _enemy = artboard.getNode("Hero");
     _artboard = artboard;
-    play("walk");
+//    play("walk");
   }
 
   @override

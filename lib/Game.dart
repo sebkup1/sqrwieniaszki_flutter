@@ -15,17 +15,18 @@ class Game extends StatefulWidget {
   BuildContext _context;
 
   @override
-  _GameState createState() => _GameState(_context);
+  GameState createState() => GameState(_context);
 }
 
-class _GameState extends State<Game> with SingleTickerProviderStateMixin {
-  MapControls _mapController;
+class GameState extends State<Game> with SingleTickerProviderStateMixin {
+  MapControls _mapController = MapControls();
   HeroAnimationController _heroControler;
   FlareActor _hero;
   FlareActor _map;
   double _angleDiffRatio = 0.05;
   double _screenWidth, _screenHeight;
-  double _lastCoursorX = -1.0, _lastCoursorY = -1.0;
+  double _lastCoursorX = -1.0,
+      _lastCoursorY = -1.0;
   bool _verMoveStarted = false;
   double _verMoveDist = 0.0;
   bool _vertGestDone = false;
@@ -33,17 +34,19 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   BuildContext _context;
   Globals _globals;
 
-  _GameState(this._context);
+//  Enemies _enemies = Enemies();
+
+  GameState(this._context);
 
   @override
   initState() {
     super.initState();
+
     _heroControler = HeroAnimationController();
     _hero = FlareActor(
       "assets/Hero.flr",
       controller: _heroControler,
     );
-    _mapController = MapControls();
     _mapController.setHero(_hero);
 
     _map = FlareActor(
@@ -55,44 +58,59 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     _globals = Globals();
-    _screenWidth = MediaQuery.of(context).size.width;
-    _screenHeight = MediaQuery.of(context).size.height;
+    _screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    _screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
     _globals.setScreenSizes(_screenWidth, _screenHeight);
+    MapControls().addEnemy(enemy);
+    _mapController.setGameState(this);
 
     return Scaffold(
-        backgroundColor: Colors.blueAccent,
-        body: GestureDetector(
-          onPanUpdate: (DragUpdateDetails details) =>
-              onDragUpdate(context, details),
-          onPanEnd: (DragEndDetails details) => onDragEnd(details),
-          child: Stack(
-            children: <Widget>[
-              Positioned.fill(
-                child: _map,
-              ),
-              Positioned(
-                left: (_screenWidth / 2) - Globals().heroWidth / 2,
-                top: (_screenHeight / 2) - Globals().heroHeight / 2,
-                child: Transform.rotate(
-                  angle: Globals().heroAngle,
-                  child: Container(
+      backgroundColor: Colors.blueAccent,
+      body: GestureDetector(
+        onPanUpdate: (DragUpdateDetails details) =>
+            onDragUpdate(context, details),
+        onPanEnd: (DragEndDetails details) => onDragEnd(details),
+        child: Stack(
+          children: <Widget>[
+        Positioned.fill(
+        child: _map,
+        ),
+        Positioned(
+          left: (_screenWidth / 2) - Globals().heroWidth / 2,
+          top: (_screenHeight / 2) - Globals().heroHeight / 2,
+          child: Transform.rotate(
+            angle: Globals().heroAngle,
+            child: Container(
 //                    margin: const EdgeInsets.all(1.0),
 //                    decoration: BoxDecoration(border: Border.all()),
-                    height: Globals().heroHeight,
-                    width: Globals().heroWidth,
-                    child: _hero,
-                  ),
-                ),
-              ),
-              enemies(),
-            ],
+              height: Globals().heroHeight,
+              width: Globals().heroWidth,
+              child: _hero,
+            ),
           ),
-        ));
+        ),
+        getEnemies(),
+        ],
+      ),
+    ));
+  }
+
+  void setEnemy(double x, double y) {
+    setState(() {
+//      enemy.X = x;
+//      enemy.Y = y;
+//      print("x " + '$x' + " |  y " + '$y');
+    });
   }
 
   void onDragUpdate(BuildContext context, DragUpdateDetails details) {
     print('${details.globalPosition}');
-    final RenderBox box = context.findRenderObject();
     setState(() {
       double newX = details.globalPosition.dx;
       double newY = details.globalPosition.dy;
@@ -103,9 +121,11 @@ class _GameState extends State<Game> with SingleTickerProviderStateMixin {
           _verMoveDist = 0.0;
           if (abs(newX - _lastCoursorX) * _angleDiffRatio < pi / 8) {
             if (newX > _screenWidth / 2 && newX > _lastCoursorX) {
-              Globals().heroAngle += abs(newX - _lastCoursorX) * _angleDiffRatio;
+              Globals().heroAngle +=
+                  abs(newX - _lastCoursorX) * _angleDiffRatio;
             } else if (newX < _screenWidth / 2 && newX < _lastCoursorX) {
-              Globals().heroAngle += -abs(newX - _lastCoursorX) * _angleDiffRatio;
+              Globals().heroAngle +=
+                  -abs(newX - _lastCoursorX) * _angleDiffRatio;
             }
           }
           _mapController.heroAngle = Globals().heroAngle;
