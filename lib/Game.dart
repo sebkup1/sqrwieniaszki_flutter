@@ -4,8 +4,8 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import 'package:sqrwieniaszki_flutter/Enemies/Enemies.dart';
+
 import 'HeroController.dart';
 import 'MapControls.dart';
 import 'Miscalenious.dart';
@@ -25,8 +25,7 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
   FlareActor _map;
   double _angleDiffRatio = 0.05;
   double _screenWidth, _screenHeight;
-  double _lastCoursorX = -1.0,
-      _lastCoursorY = -1.0;
+  double _lastCoursorX = -1.0, _lastCoursorY = -1.0;
   bool _verMoveStarted = false;
   double _verMoveDist = 0.0;
   bool _vertGestDone = false;
@@ -34,9 +33,11 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
   BuildContext _context;
   Globals _globals;
 
-//  Enemies _enemies = Enemies();
-
   GameState(this._context);
+
+  void updateState() {
+    setState(() {});
+  }
 
   @override
   initState() {
@@ -53,60 +54,64 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
       "assets/map.flr",
       controller: _mapController,
     );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    MapControls().addEnemy(enemy1);
+    MapControls().addEnemy(enemy2);
+    MapControls().addEnemy(enemy3);
   }
 
   @override
   Widget build(BuildContext context) {
     _globals = Globals();
-    _screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    _screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    _screenWidth = MediaQuery.of(context).size.width;
+    _screenHeight = MediaQuery.of(context).size.height;
     _globals.setScreenSizes(_screenWidth, _screenHeight);
-    MapControls().addEnemy(enemy);
+
     _mapController.setGameState(this);
 
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
-      body: GestureDetector(
-        onPanUpdate: (DragUpdateDetails details) =>
-            onDragUpdate(context, details),
-        onPanEnd: (DragEndDetails details) => onDragEnd(details),
-        child: Stack(
-          children: <Widget>[
-        Positioned.fill(
-        child: _map,
-        ),
-        Positioned(
-          left: (_screenWidth / 2) - Globals().heroWidth / 2,
-          top: (_screenHeight / 2) - Globals().heroHeight / 2,
-          child: Transform.rotate(
-            angle: Globals().heroAngle,
-            child: Container(
+        backgroundColor: Colors.blueAccent,
+        body: GestureDetector(
+          onPanUpdate: (DragUpdateDetails details) =>
+              onDragUpdate(context, details),
+          onPanEnd: (DragEndDetails details) => onDragEnd(details),
+          child: Stack(
+            children: <Widget>[
+              Positioned.fill(
+                child: _map,
+              ),
+              Positioned(
+                left: (_screenWidth / 2) - Globals().heroWidth / 2,
+                top: (_screenHeight / 2) - Globals().heroHeight / 2,
+                child: Transform.rotate(
+                  angle: Globals().heroAngle,
+                  child: Container(
 //                    margin: const EdgeInsets.all(1.0),
 //                    decoration: BoxDecoration(border: Border.all()),
-              height: Globals().heroHeight,
-              width: Globals().heroWidth,
-              child: _hero,
-            ),
+                    height: Globals().heroHeight,
+                    width: Globals().heroWidth,
+                    child: _hero,
+                  ),
+                ),
+              ),
+              getHeroes(),
+            ],
           ),
-        ),
-        getEnemies(),
-        ],
-      ),
-    ));
-  }
-
-  void setEnemy(double x, double y) {
-    setState(() {
-//      enemy.X = x;
-//      enemy.Y = y;
-//      print("x " + '$x' + " |  y " + '$y');
-    });
+        ));
   }
 
   void onDragUpdate(BuildContext context, DragUpdateDetails details) {

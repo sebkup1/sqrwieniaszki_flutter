@@ -25,15 +25,14 @@ class CharacterInfo {
   double angle;
   double scale;
   double X, Y;
+  String name;
 
 //  CharacterInfo(double width, double height, double this.scale) {
 //    this.width = width * scale;
 //    this.height = height * scale;
 //  }
 
-  CharacterInfo(this.angle, this.X, this.Y) {
-
-  }
+  CharacterInfo(this.angle, this.X, this.Y, this.name) {}
 }
 
 class Globals {
