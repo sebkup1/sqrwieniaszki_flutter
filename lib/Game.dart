@@ -55,23 +55,20 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
       controller: _mapController,
     );
 
+    Enemies().addEnemy(name: "Steve Rogers",
+    X: 100, Y: 100, angle: 100);
 
+    Enemies().addEnemy(name: "Jorah Mormont",
+        X: -100, Y: -100, angle: -100);
 
+    Enemies().addEnemy(name: "Antoni Macierewicz",
+        X: 0, Y: 0, angle: 0);
 
+    Enemies().addEnemy(name: "Sandor Clegane",
+        X: 200, Y: 200, angle: 200);
 
-
-
-
-
-
-
-
-
-
-
-    MapControls().addEnemy(enemy1);
-    MapControls().addEnemy(enemy2);
-    MapControls().addEnemy(enemy3);
+    Enemies().addEnemy(name: "Johnny Walker",
+        X: 0, Y: 200, angle: 200);
   }
 
   @override
@@ -94,6 +91,7 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
               Positioned.fill(
                 child: _map,
               ),
+              Enemies().drawEnemies(),
               Positioned(
                 left: (_screenWidth / 2) - Globals().heroWidth / 2,
                 top: (_screenHeight / 2) - Globals().heroHeight / 2,
@@ -108,7 +106,7 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
                   ),
                 ),
               ),
-              getHeroes(),
+
             ],
           ),
         ));

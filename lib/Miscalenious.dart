@@ -1,3 +1,4 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 
@@ -26,13 +27,14 @@ class CharacterInfo {
   double scale;
   double X, Y;
   String name;
+  FlareActor flareActor;
 
 //  CharacterInfo(double width, double height, double this.scale) {
 //    this.width = width * scale;
 //    this.height = height * scale;
 //  }
 
-  CharacterInfo(this.angle, this.X, this.Y, this.name) {}
+  CharacterInfo(this.angle, this.X, this.Y, this.name, this.flareActor) {}
 }
 
 class Globals {
