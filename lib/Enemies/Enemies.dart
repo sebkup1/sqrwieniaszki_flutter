@@ -37,14 +37,15 @@ class Enemies {
   }
 
   void addEnemy(
-      {double angle: 0, double X: 0, double Y: 0, String name: "Unknown"}) {
+      {double angle: 0, double X: 0, double Y: 0, String name: "Unknown", Familly familly: Familly.Avengers}) {
     CharacterInfo newGay;
     EnemyController contr = EnemyController();
     newGay = CharacterInfo(angle, X, Y, name,
         FlareActor(
           "assets/Enemy.flr",
           controller: contr,
-        ));
+        ),
+        familly);
     contr.character = newGay;
     _enemiesList.add(newGay);
   }

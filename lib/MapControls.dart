@@ -25,14 +25,14 @@ class MapControls extends FlareControls {
   ActorNode _map;
   ActorNode _ground;
   FlutterActorArtboard _artboard;
-  Vec2D heroPos;
   double _heroSpeed;
   FlareActor _hero;
   bool _walks = false;
-  bool _stopped = false;
+  bool _stopped = true;
   List<FlutterActorShape> _obstacles;
   bool heroCollidingState = false;
   FlutterActorShape _collidingObstacle;
+  CharacterInfo _collidingEnemy;
   FootState _heroFootState;
   GameState _gameState;
 
@@ -50,29 +50,53 @@ class MapControls extends FlareControls {
 //      Vec2D pos = Vec2D.add(Vec2D(), _map.translation,
 //          Vec2D.fromValues(-sin(angle) * _speed, cos(angle) * _speed));
 
-      Vec2D newPos = Vec2D.subtract(
-          Vec2D(),
-          heroPos,
-          Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed,
-              cos(Globals().heroAngle) * _heroSpeed));
 
-      double prevDist = sqrt(pow(_collidingObstacle.x - heroPos.values[0], 2) +
-          pow(_collidingObstacle.y - heroPos.values[1], 2));
 
-      double newDist = sqrt(pow(_collidingObstacle.x - newPos.values[0], 2) +
-          pow(_collidingObstacle.y - newPos.values[1], 2));
+      double prevDist = 0, newDist = 1;
+      if (_collidingObstacle != null) {
+
+        Vec2D newPos = Vec2D.subtract(
+            Vec2D(),
+            Globals().heroPosOnMap,
+            Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed,
+                cos(Globals().heroAngle) * _heroSpeed));
+
+      prevDist =
+          pow(_collidingObstacle.x - Globals().heroPosOnMap.values[0], 2) +
+              pow(_collidingObstacle.y - Globals().heroPosOnMap.values[1], 2);
+
+      newDist = pow(_collidingObstacle.x - newPos.values[0], 2) +
+          pow(_collidingObstacle.y - newPos.values[1], 2);
+      }
+
+      if (_collidingEnemy != null) {
+        Vec2D newPos = Vec2D.add(
+            Vec2D(),
+            Vec2D.fromValues(_collidingEnemy.X, _collidingEnemy.Y),
+            Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed / 2,
+                cos(Globals().heroAngle) * _heroSpeed / 2));
+
+        newDist = pow(newPos[0] - Globals().screenWidth / 2 + Globals().heroWidth / 2, 2)
+            + pow(newPos[1] - Globals().screenHeight / 2 + Globals().heroHeight / 2,2);
+
+        prevDist = pow(_collidingEnemy.X - Globals().screenWidth / 2 + Globals().heroWidth / 2, 2)
+            + pow(_collidingEnemy.Y - Globals().screenHeight / 2 + Globals().heroHeight / 2,2);
+
+      }
 
       if (prevDist < newDist) {
         heroCollidingState = false;
+        _collidingObstacle = null;
+        _collidingEnemy = null;
         _map.translation = Vec2D.add(
             Vec2D(),
             _map.translation,
             Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed,
                 cos(Globals().heroAngle) * _heroSpeed));
 
-        heroPos = Vec2D.subtract(
+        Globals().heroPosOnMap = Vec2D.subtract(
             Vec2D(),
-            heroPos,
+            Globals().heroPosOnMap,
             Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed,
                 cos(Globals().heroAngle) * _heroSpeed));
       } else {}
@@ -119,7 +143,8 @@ class MapControls extends FlareControls {
       */
 
     }
-    Globals().heroAngle = angle;
+
+
   }
 
 //  void _setCorrectPositions(double speed) {
@@ -198,27 +223,26 @@ class MapControls extends FlareControls {
         Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed,
             cos(Globals().heroAngle) * _heroSpeed));
 
-    if (pos[1] < (_ground.children[0] as FlutterActorRectangle).height / 2 &&
+    if (/*pos[1] < (_ground.children[0] as FlutterActorRectangle).height / 2 &&
         pos[1] > -(_ground.children[0] as FlutterActorRectangle).height / 2 &&
         pos[0] < (_ground.children[0] as FlutterActorRectangle).width / 2 &&
-        pos[0] > -(_ground.children[0] as FlutterActorRectangle).width / 2 &&
-        (!obstaclesCollision(Vec2D.subtract(
+        pos[0] > -(_ground.children[0] as FlutterActorRectangle).width / 2 &&*/
+        (!collision(Vec2D.subtract(
             Vec2D(),
-            heroPos,
+            Globals().heroPosOnMap,
             Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed,
                 cos(Globals().heroAngle) * _heroSpeed))))) {
       _map.translation = pos;
       if (!_walks) {
         _walks = true;
       }
-      heroPos = Vec2D.subtract(
+      Globals().heroPosOnMap = Vec2D.subtract(
           Vec2D(),
-          heroPos,
+          Globals().heroPosOnMap,
           Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed,
               cos(Globals().heroAngle) * _heroSpeed));
 
       Enemies().getEnemyList().forEach((enemy) {
-        print(enemy.name);
         Vec2D enemyPos = Vec2D.add(
             Vec2D(),
             Vec2D.fromValues(enemy.X, enemy.Y),
@@ -251,7 +275,8 @@ class MapControls extends FlareControls {
     _ground = artboard.getNode("Ground");
     _map = artboard.getNode("map2");
     _map.translation = Vec2D.fromValues(0, 0);
-    heroPos = Vec2D.fromValues(_artboard.width / 2, _artboard.height / 2);
+    Globals().heroPosOnMap = Vec2D.fromValues(_artboard.width / 2, _artboard.height / 2);
+
     _obstacles = List<FlutterActorShape>();
     _heroFootState = FootState.Walk;
     _heroSpeed = 2;
@@ -265,7 +290,7 @@ class MapControls extends FlareControls {
   @override
   void setViewTransform(Mat2D viewTransform) {}
 
-  bool obstaclesCollision(Vec2D pos) {
+  bool collision(Vec2D pos) {
     for (final obst in _obstacles) {
       if (obst.children[0] is FlutterActorPath) continue;
       bool Right = pos[0] >=
@@ -294,6 +319,26 @@ class MapControls extends FlareControls {
         _collidingObstacle = obst;
         break;
       }
+    }
+
+    // enemies colission
+    if (!heroCollidingState) {
+      for (final enemy in  Enemies().getEnemyList()) {
+        Vec2D newPos = Vec2D.add(
+            Vec2D(),
+            Vec2D.fromValues(enemy.X, enemy.Y),
+            Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed / 2,
+                cos(Globals().heroAngle) * _heroSpeed / 2));
+
+        double newDist = pow(newPos[0] - Globals().screenWidth / 2 + Globals().heroWidth / 2, 2)
+            + pow(newPos[1] - Globals().screenHeight / 2 + Globals().heroHeight / 2,2);
+        if(newDist < 3000 && newDist < pow(enemy.X - Globals().screenWidth / 2 + Globals().heroWidth / 2, 2)
+            + pow(enemy.Y - Globals().screenHeight / 2 + Globals().heroHeight / 2,2)) {
+          heroCollidingState = true;
+          _collidingEnemy = enemy;
+          break;
+        }
+      };
     }
 
     return heroCollidingState;

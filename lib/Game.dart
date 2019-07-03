@@ -21,7 +21,6 @@ class Game extends StatefulWidget {
 class GameState extends State<Game> with SingleTickerProviderStateMixin {
   MapControls _mapController = MapControls();
   HeroAnimationController _heroControler;
-  FlareActor _hero;
   FlareActor _map;
   double _angleDiffRatio = 0.05;
   double _screenWidth, _screenHeight;
@@ -44,11 +43,6 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
     super.initState();
 
     _heroControler = HeroAnimationController();
-    _hero = FlareActor(
-      "assets/Hero.flr",
-      controller: _heroControler,
-    );
-    _mapController.setHero(_hero);
 
     _map = FlareActor(
       "assets/map.flr",
@@ -56,19 +50,56 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
     );
 
     Enemies().addEnemy(name: "Steve Rogers",
-    X: 100, Y: 100, angle: 100);
+        X: 0, Y: 450, angle: 0, familly: Familly.Avengers);
 
     Enemies().addEnemy(name: "Jorah Mormont",
-        X: -100, Y: -100, angle: -100);
+        X: -200, Y: -100, angle: -100, familly: Familly.Avengers);
 
     Enemies().addEnemy(name: "Antoni Macierewicz",
-        X: 0, Y: 0, angle: 0);
+        X: -300, Y: 1100, angle: 0, familly: Familly.Avengers);
 
-    Enemies().addEnemy(name: "Sandor Clegane",
-        X: 200, Y: 200, angle: 200);
+    Enemies().addEnemy(name: "Pech",
+        X: -200, Y: 200, angle: 200, familly: Familly.Lanister);
 
     Enemies().addEnemy(name: "Johnny Walker",
-        X: 0, Y: 200, angle: 200);
+        X: 0, Y: 200, angle: 200, familly: Familly.Lanister);
+
+    Enemies().addEnemy(name: "Steve Rogers",
+        X: 1100, Y: 1450, angle: 0);
+
+    Enemies().addEnemy(name: "Jorah Mormont",
+        X: -1100, Y: -1100, angle: -100, familly: Familly.Ciapaci);
+
+    Enemies().addEnemy(name: "Antoni Macierewicz",
+        X: 1000, Y: 10, angle: 0, familly: Familly.Ciapaci);
+
+    Enemies().addEnemy(name: "Sandor Clegane",
+        X: 1200, Y: 1200, angle: 200, familly: Familly.Geje);
+
+    Enemies().addEnemy(name: "Johnny Walker",
+        X: 0, Y: 1200, angle: 200, familly: Familly.PiS);
+
+    Enemies().addEnemy(name: "Steve Rogers",
+        X: 2100, Y: 2450, angle: 0);
+
+    Enemies().addEnemy(name: "Jorah Mormont",
+        X: -2100, Y: -2100, angle: -100);
+
+    Enemies().addEnemy(name: "Antoni Macierewicz",
+        X: 200, Y: 0, angle: 0);
+
+    Enemies().addEnemy(name: "Sandor Clegane",
+        X: 2200, Y: 2200, angle: 200);
+
+    Enemies().addEnemy(name: "Johnny Walker",
+        X: 0, Y: 2200, angle: 200);
+
+  Globals().hero = CharacterInfo(0,0,0,"Buhaj",FlareActor(
+    "assets/Hero.flr",
+    controller: _heroControler,
+  ), Familly.Lanister );
+
+    _mapController.setHero(Globals().hero.flareActor);
   }
 
   @override
@@ -102,7 +133,7 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
 //                    decoration: BoxDecoration(border: Border.all()),
                     height: Globals().heroHeight,
                     width: Globals().heroWidth,
-                    child: _hero,
+                    child: Globals().hero.flareActor,
                   ),
                 ),
               ),
