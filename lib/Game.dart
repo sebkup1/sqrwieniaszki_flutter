@@ -112,6 +112,21 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
     Enemies().addEnemy(name: "Johnny Walker",
         X: -1, Y: -10, angle: 200, familly: Familly.Lanister);
 
+    Enemies().addEnemy(name: "Jorah Mormont",
+        X: -1900, Y: -1500, angle: -100, familly: Familly.Legia);
+
+    Enemies().addEnemy(name: "Antoni Macierewicz",
+        X: 1200, Y: -1500, angle: 0, familly: Familly.Ciapaci);
+
+    Enemies().addEnemy(name: "Sandor Clegane",
+        X: 200, Y: -1500, angle: 200, familly: Familly.Geje);
+
+    Enemies().addEnemy(name: "Johnny Walker",
+        X: -1150, Y: 1200, angle: 200, familly: Familly.Avengers);
+
+    Enemies().addEnemy(name: "Johnny Walker",
+        X: -1, Y: -1077, angle: 200, familly: Familly.Lanister);
+
 
 
   Globals().hero = CharacterInfo(0,0,0,"Buhaj",FlareActor(

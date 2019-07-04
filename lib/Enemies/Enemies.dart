@@ -14,33 +14,46 @@ class Enemies {
   }
 
   List<CharacterInfo> _aliveEnemiesList = new List<CharacterInfo>();
+  List<CharacterInfo> _ripEemiesList = new List<CharacterInfo>();
+  List<Widget> widgets = List<Widget>();
 
   Widget drawEnemies() {
-    List<Widget> widgets = List<Widget>();
-    _aliveEnemiesList.forEach((enemy) {
-      widgets.add(Positioned(
-          left: enemy.X,
-          top: enemy.Y,
-          child: Transform.rotate(
-            angle: enemy.angle,
-            child: Container(
-//                    margin: const EdgeInsets.all(1.0),
-//                    decoration: BoxDecoration(border: Border.all()),
-              height: Globals().heroHeight,
-              width: Globals().heroWidth,
-              child: enemy.flareActor,
-            ),
-          )));
-    });
+    widgets.clear();
+    _ripEemiesList.forEach(_addToStack);
+    _aliveEnemiesList.forEach(_addToStack);
 
     return Stack(children: widgets);
   }
 
+  void _addToStack(CharacterInfo enemy) {
+    widgets.add(Positioned(
+        left: enemy.X,
+        top: enemy.Y,
+        child: Transform.rotate(
+          angle: enemy.angle,
+          child: Container(
+//                    margin: const EdgeInsets.all(1.0),
+//                    decoration: BoxDecoration(border: Border.all()),
+            height: Globals().heroHeight,
+            width: Globals().heroWidth,
+            child: enemy.flareActor,
+          ),
+        )));
+  }
+
   void addEnemy(
-      {double angle: 0, double X: 0, double Y: 0, String name: "Unknown", Familly familly: Familly.Avengers}) {
-    CharacterInfo newGay;
+      {double angle: 0,
+      double X: 0,
+      double Y: 0,
+      String name: "Unknown",
+      Familly familly: Familly.Avengers}) {
+//    CharacterInfo newGay;
     EnemyController contr = EnemyController();
-    newGay = CharacterInfo(angle, X, Y, name,
+    CharacterInfo newGay = CharacterInfo(
+        angle,
+        X,
+        Y,
+        name,
         FlareActor(
           "assets/Enemy.flr",
           controller: contr,
@@ -52,5 +65,14 @@ class Enemies {
 
   List<CharacterInfo> getEnemyList() {
     return _aliveEnemiesList;
+  }
+
+  List<CharacterInfo> getCorpsList() {
+    return _ripEemiesList;
+  }
+
+  void rip(CharacterInfo corps) {
+    _aliveEnemiesList.remove(corps);
+    _ripEemiesList.add(corps);
   }
 }

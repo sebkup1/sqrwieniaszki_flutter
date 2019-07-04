@@ -23,7 +23,6 @@ class MapControls extends FlareControls {
   }
 
   ActorNode _map;
-  ActorNode _ground;
   FlutterActorArtboard _artboard;
   double _heroSpeed;
   FlareActor _hero;
@@ -157,6 +156,9 @@ class MapControls extends FlareControls {
       Enemies().getEnemyList().forEach((enemy) {
         (enemy.flareActor.controller as EnemyController).update();
       });
+      Enemies().getCorpsList().forEach((enemy) {
+        (enemy.flareActor.controller as EnemyController).update();
+      });
       _gameState.updateState();
       return true;
     }
@@ -186,6 +188,16 @@ class MapControls extends FlareControls {
           Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed,
               cos(Globals().heroAngle) * _heroSpeed));
 
+      Enemies().getCorpsList().forEach((corps) {
+        Vec2D enemyPos = Vec2D.add(
+            Vec2D(),
+            Vec2D.fromValues(corps.X, corps.Y),
+            Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed / 2,
+                cos(Globals().heroAngle) * _heroSpeed / 2));
+
+        corps.X = enemyPos[0];
+        corps.Y = enemyPos[1];
+      });
       Enemies().getEnemyList().forEach((enemy) {
         Vec2D enemyPos = Vec2D.add(
             Vec2D(),
@@ -205,7 +217,9 @@ class MapControls extends FlareControls {
     Enemies().getEnemyList().forEach((enemy) {
       (enemy.flareActor.controller as EnemyController).update();
     });
-
+    Enemies().getCorpsList().forEach((enemy) {
+      (enemy.flareActor.controller as EnemyController).update();
+    });
     _gameState.updateState();
 
     return true;

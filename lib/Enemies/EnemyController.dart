@@ -31,6 +31,7 @@ class EnemyController extends FlareControls {
     print("${_character.name} gets puch from ${enemy.name}, his live is $live");
     if (live == 0) {
       play("death"); //death
+      Enemies().rip(_character);
       return;
     }
     HatedObject hatedObject;
