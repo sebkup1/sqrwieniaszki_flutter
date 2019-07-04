@@ -13,11 +13,11 @@ class Enemies {
     return _instance;
   }
 
-  List<CharacterInfo> _enemiesList = new List<CharacterInfo>();
+  List<CharacterInfo> _aliveEnemiesList = new List<CharacterInfo>();
 
   Widget drawEnemies() {
     List<Widget> widgets = List<Widget>();
-    _enemiesList.forEach((enemy) {
+    _aliveEnemiesList.forEach((enemy) {
       widgets.add(Positioned(
           left: enemy.X,
           top: enemy.Y,
@@ -47,10 +47,10 @@ class Enemies {
         ),
         familly);
     contr.character = newGay;
-    _enemiesList.add(newGay);
+    _aliveEnemiesList.add(newGay);
   }
 
   List<CharacterInfo> getEnemyList() {
-    return _enemiesList;
+    return _aliveEnemiesList;
   }
 }

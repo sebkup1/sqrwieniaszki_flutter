@@ -28,7 +28,7 @@ class MapControls extends FlareControls {
   double _heroSpeed;
   FlareActor _hero;
   bool _walks = false;
-  bool _stopped = true;
+  bool _stopped = false;
   List<FlutterActorShape> _obstacles;
   bool heroCollidingState = false;
   FlutterActorShape _collidingObstacle;
@@ -46,12 +46,8 @@ class MapControls extends FlareControls {
 
   set heroAngle(double angle) {
     Globals().heroAngle = angle;
+
     if (heroCollidingState) {
-//      Vec2D pos = Vec2D.add(Vec2D(), _map.translation,
-//          Vec2D.fromValues(-sin(angle) * _speed, cos(angle) * _speed));
-
-
-
       double prevDist = 0, newDist = 1;
       if (_collidingObstacle != null) {
 
@@ -100,60 +96,8 @@ class MapControls extends FlareControls {
             Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed,
                 cos(Globals().heroAngle) * _heroSpeed));
       } else {}
-/*      
-      bool Right = pos[0] >= (_collidingObstacle.x -
-          0.5 * (_collidingObstacle.children[0] as FlutterActorRectangle).width -
-          abs(_heroSizes.width / 2 * cos(_heroAngle)) -
-          abs(_heroSizes.height / 2 * sin(_heroAngle)));
-      bool Left = pos[0] <= (_collidingObstacle.x +
-          0.5 * (_collidingObstacle.children[0] as FlutterActorRectangle).width +
-          abs(_heroSizes.width / 2 * cos(_heroAngle)) +
-          abs(_heroSizes.height / 2 * sin(_heroAngle)));
-      bool Down = pos[1] >= (_collidingObstacle.y -
-          0.5 * (_collidingObstacle.children[0] as FlutterActorRectangle).height -
-          abs(_heroSizes.height / 2 * cos(_heroAngle)) -
-          abs(_heroSizes.width / 2 * sin(_heroAngle)));
-      bool Up = pos[1] <= (_collidingObstacle.y +
-          0.5 * (_collidingObstacle.children[0] as FlutterActorRectangle).height +
-          abs(_heroSizes.height / 2 * cos(_heroAngle)) +
-          abs(_heroSizes.width / 2 * sin(_heroAngle)));
-
-      if (Right && Left && Down && Up) {
-        heroCollidingState = true;
-          _stopped = true;
-      } else {
-        heroCollidingState = false;
-      }
-
-        _setCorrectPositions(_speed);
-        heroCollidingState = false;
-      if(_collidingObstacle.x < heroPos.values[0]) {
-        if (_collidingObstacle.y < heroPos.values[1]) {
-
-        } else {
-
-        }
-      } else {
-        if (_collidingObstacle.y < heroPos.values[1]) {
-
-        } else {
-
-        }
-      }
-      */
-
     }
-
-
   }
-
-//  void _setCorrectPositions(double speed) {
-//    _map.translation = Vec2D.subtract(Vec2D(), _map.translation,
-//        Vec2D.fromValues(-sin(Globals().heroAngle) * speed, cos(Globals().heroAngle) * speed));
-//    heroPos = Vec2D.add(
-//        Vec2D(), heroPos, Vec2D.fromValues(
-//            -sin(Globals().heroAngle) * speed, cos(Globals().heroAngle) * speed));
-//  }
 
   void toggleStopped() {
     _stopped = !_stopped;
@@ -321,9 +265,9 @@ class MapControls extends FlareControls {
       }
     }
 
-    // enemies colission
     if (!heroCollidingState) {
       for (final enemy in  Enemies().getEnemyList()) {
+        if((enemy.flareActor.controller as EnemyController).live <= 0) continue;
         Vec2D newPos = Vec2D.add(
             Vec2D(),
             Vec2D.fromValues(enemy.X, enemy.Y),

@@ -50,49 +50,69 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
     );
 
     Enemies().addEnemy(name: "Steve Rogers",
-        X: 0, Y: 450, angle: 0, familly: Familly.Avengers);
+        X: 0, Y: 450, angle: 0, familly: Familly.Lanister);
 
     Enemies().addEnemy(name: "Jorah Mormont",
         X: -200, Y: -100, angle: -100, familly: Familly.Avengers);
 
     Enemies().addEnemy(name: "Antoni Macierewicz",
-        X: -300, Y: 1100, angle: 0, familly: Familly.Avengers);
+        X: -300, Y: 500, angle: 0, familly: Familly.Geje);
 
     Enemies().addEnemy(name: "Pech",
-        X: -200, Y: 200, angle: 200, familly: Familly.Lanister);
+        X: -200, Y: 200, angle: 200, familly: Familly.Legia);
 
     Enemies().addEnemy(name: "Johnny Walker",
         X: 0, Y: 200, angle: 200, familly: Familly.Lanister);
 
     Enemies().addEnemy(name: "Steve Rogers",
-        X: 1100, Y: 1450, angle: 0);
+        X: 510, Y: 450, angle: 0, familly: Familly.Legia);
 
     Enemies().addEnemy(name: "Jorah Mormont",
-        X: -1100, Y: -1100, angle: -100, familly: Familly.Ciapaci);
+        X: -450, Y: -1100, angle: -100, familly: Familly.Ciapaci);
 
     Enemies().addEnemy(name: "Antoni Macierewicz",
-        X: 1000, Y: 10, angle: 0, familly: Familly.Ciapaci);
+        X: 800, Y: 10, angle: 0, familly: Familly.Ciapaci);
 
     Enemies().addEnemy(name: "Sandor Clegane",
-        X: 1200, Y: 1200, angle: 200, familly: Familly.Geje);
+        X: 600, Y: 1200, angle: 200, familly: Familly.Geje);
 
     Enemies().addEnemy(name: "Johnny Walker",
         X: 0, Y: 1200, angle: 200, familly: Familly.PiS);
 
     Enemies().addEnemy(name: "Steve Rogers",
-        X: 2100, Y: 2450, angle: 0);
+        X: 310, Y: 50, angle: 0, familly: Familly.PiS);
 
     Enemies().addEnemy(name: "Jorah Mormont",
-        X: -2100, Y: -2100, angle: -100);
+        X: -900, Y: -500, angle: -100, familly: Familly.Ciapaci);
 
     Enemies().addEnemy(name: "Antoni Macierewicz",
-        X: 200, Y: 0, angle: 0);
+        X: 200, Y: 0, angle: 0, familly: Familly.PiS);
 
     Enemies().addEnemy(name: "Sandor Clegane",
-        X: 2200, Y: 2200, angle: 200);
+        X: 200, Y: 1200, angle: 200, familly: Familly.Avengers);
 
     Enemies().addEnemy(name: "Johnny Walker",
-        X: 0, Y: 2200, angle: 200);
+        X: -150, Y: 1200, angle: 200, familly: Familly.PiS);
+
+    Enemies().addEnemy(name: "Steve Rogers",
+        X: 1310, Y: 150, angle: 0, familly: Familly.Lanister);
+
+    Enemies().addEnemy(name: "Jorah Mormont",
+        X: -1900, Y: -1500, angle: -100, familly: Familly.Legia);
+
+    Enemies().addEnemy(name: "Antoni Macierewicz",
+        X: 1200, Y: 1000, angle: 0, familly: Familly.Ciapaci);
+
+    Enemies().addEnemy(name: "Sandor Clegane",
+        X: 1200, Y: 1600, angle: 200, familly: Familly.Geje);
+
+    Enemies().addEnemy(name: "Johnny Walker",
+        X: -1150, Y: -1200, angle: 200, familly: Familly.Avengers);
+
+    Enemies().addEnemy(name: "Johnny Walker",
+        X: -1, Y: -10, angle: 200, familly: Familly.Lanister);
+
+
 
   Globals().hero = CharacterInfo(0,0,0,"Buhaj",FlareActor(
     "assets/Hero.flr",
