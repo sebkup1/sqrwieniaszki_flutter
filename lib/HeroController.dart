@@ -25,10 +25,6 @@ class HeroAnimationController extends FlareControls {
   @override
   void setViewTransform(Mat2D viewTransform) {}
 
-  void stop() {
-    play("");
-  }
-
   void start() {
     play("walk");
   }

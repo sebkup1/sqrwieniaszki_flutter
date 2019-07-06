@@ -71,8 +71,15 @@ class Enemies {
     return _ripEemiesList;
   }
 
+  List<CharacterInfo> getAll() {
+    List<CharacterInfo> all = List<CharacterInfo>();
+    all.addAll(_ripEemiesList);
+    all.addAll(_aliveEnemiesList);
+    return all;
+  }
+
   void rip(CharacterInfo corps) {
-    _aliveEnemiesList.remove(corps);
-    _ripEemiesList.add(corps);
+    CharacterInfo temp = corps;
+    if (_aliveEnemiesList.remove(corps)) _ripEemiesList.add(temp);
   }
 }

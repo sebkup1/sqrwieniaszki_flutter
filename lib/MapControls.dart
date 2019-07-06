@@ -27,7 +27,7 @@ class MapControls extends FlareControls {
   double _heroSpeed;
   FlareActor _hero;
   bool _walks = false;
-  bool _stopped = false;
+  bool _stopped = true;
   List<FlutterActorShape> _obstacles;
   bool heroCollidingState = false;
   FlutterActorShape _collidingObstacle;
@@ -94,7 +94,7 @@ class MapControls extends FlareControls {
             Globals().heroPosOnMap,
             Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed,
                 cos(Globals().heroAngle) * _heroSpeed));
-      } else {}
+      }
     }
   }
 
@@ -153,17 +153,16 @@ class MapControls extends FlareControls {
     super.advance(artboard, elapsed);
 
     if (_stopped || heroCollidingState) {
-      Enemies().getEnemyList().forEach((enemy) {
+
+      Enemies().getAll().forEach((enemy) {
         (enemy.flareActor.controller as EnemyController).update();
       });
-      Enemies().getCorpsList().forEach((enemy) {
-        (enemy.flareActor.controller as EnemyController).update();
-      });
+
       _gameState.updateState();
       return true;
     }
 
-    Vec2D pos = Vec2D.add(
+    Vec2D newMapPosition = Vec2D.add(
         Vec2D(),
         _map.translation,
         Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed,
@@ -178,7 +177,7 @@ class MapControls extends FlareControls {
             Globals().heroPosOnMap,
             Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed,
                 cos(Globals().heroAngle) * _heroSpeed))))) {
-      _map.translation = pos;
+      _map.translation = newMapPosition;
       if (!_walks) {
         _walks = true;
       }
@@ -188,7 +187,7 @@ class MapControls extends FlareControls {
           Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed,
               cos(Globals().heroAngle) * _heroSpeed));
 
-      Enemies().getCorpsList().forEach((corps) {
+      Enemies().getAll().forEach((corps) {
         Vec2D enemyPos = Vec2D.add(
             Vec2D(),
             Vec2D.fromValues(corps.X, corps.Y),
@@ -198,26 +197,13 @@ class MapControls extends FlareControls {
         corps.X = enemyPos[0];
         corps.Y = enemyPos[1];
       });
-      Enemies().getEnemyList().forEach((enemy) {
-        Vec2D enemyPos = Vec2D.add(
-            Vec2D(),
-            Vec2D.fromValues(enemy.X, enemy.Y),
-            Vec2D.fromValues(-sin(Globals().heroAngle) * _heroSpeed / 2,
-                cos(Globals().heroAngle) * _heroSpeed / 2));
-
-        enemy.X = enemyPos[0];
-        enemy.Y = enemyPos[1];
-      });
     } else {
       if (_walks) {
         _walks = false;
       }
     }
 
-    Enemies().getEnemyList().forEach((enemy) {
-      (enemy.flareActor.controller as EnemyController).update();
-    });
-    Enemies().getCorpsList().forEach((enemy) {
+    Enemies().getAll().forEach((enemy) {
       (enemy.flareActor.controller as EnemyController).update();
     });
     _gameState.updateState();
@@ -230,13 +216,12 @@ class MapControls extends FlareControls {
     super.initialize(artboard);
     artboard.nodes;
     _artboard = artboard;
-    _ground = artboard.getNode("Ground");
     _map = artboard.getNode("map2");
     _map.translation = Vec2D.fromValues(0, 0);
     Globals().heroPosOnMap = Vec2D.fromValues(_artboard.width / 2, _artboard.height / 2);
 
     _obstacles = List<FlutterActorShape>();
-    _heroFootState = FootState.Walk;
+    _heroFootState = FootState.Stand;
     _heroSpeed = 2;
 
     artboard.nodes.forEach((node) => {
@@ -249,35 +234,35 @@ class MapControls extends FlareControls {
   void setViewTransform(Mat2D viewTransform) {}
 
   bool collision(Vec2D pos) {
-    for (final obst in _obstacles) {
-      if (obst.children[0] is FlutterActorPath) continue;
-      bool Right = pos[0] >=
-          (obst.x -
-              0.5 * (obst.children[0] as FlutterActorRectangle).width -
-              abs(Globals().heroWidth / 2 * cos(Globals().heroAngle)) -
-              abs(Globals().heroHeight / 2 * sin(Globals().heroAngle)));
-      bool Left = pos[0] <=
-          (obst.x +
-              0.5 * (obst.children[0] as FlutterActorRectangle).width +
-              abs(Globals().heroWidth / 2 * cos(Globals().heroAngle)) +
-              abs(Globals().heroHeight / 2 * sin(Globals().heroAngle)));
-      bool Down = pos[1] >=
-          (obst.y -
-              0.5 * (obst.children[0] as FlutterActorRectangle).height -
-              abs(Globals().heroHeight / 2 * cos(Globals().heroAngle)) -
-              abs(Globals().heroWidth / 2 * sin(Globals().heroAngle)));
-      bool Up = pos[1] <=
-          (obst.y +
-              0.5 * (obst.children[0] as FlutterActorRectangle).height +
-              abs(Globals().heroHeight / 2 * cos(Globals().heroAngle)) +
-              abs(Globals().heroWidth / 2 * sin(Globals().heroAngle)));
-
-      if (Right && Left && Down && Up) {
-        heroCollidingState = true;
-        _collidingObstacle = obst;
-        break;
-      }
-    }
+//    for (final obst in _obstacles) {
+//      if (obst.children[0] is FlutterActorPath) continue;
+//      bool Right = pos[0] >=
+//          (obst.x -
+//              0.5 * (obst.children[0] as FlutterActorRectangle).width -
+//              abs(Globals().heroWidth / 2 * cos(Globals().heroAngle)) -
+//              abs(Globals().heroHeight / 2 * sin(Globals().heroAngle)));
+//      bool Left = pos[0] <=
+//          (obst.x +
+//              0.5 * (obst.children[0] as FlutterActorRectangle).width +
+//              abs(Globals().heroWidth / 2 * cos(Globals().heroAngle)) +
+//              abs(Globals().heroHeight / 2 * sin(Globals().heroAngle)));
+//      bool Down = pos[1] >=
+//          (obst.y -
+//              0.5 * (obst.children[0] as FlutterActorRectangle).height -
+//              abs(Globals().heroHeight / 2 * cos(Globals().heroAngle)) -
+//              abs(Globals().heroWidth / 2 * sin(Globals().heroAngle)));
+//      bool Up = pos[1] <=
+//          (obst.y +
+//              0.5 * (obst.children[0] as FlutterActorRectangle).height +
+//              abs(Globals().heroHeight / 2 * cos(Globals().heroAngle)) +
+//              abs(Globals().heroWidth / 2 * sin(Globals().heroAngle)));
+//
+//      if (Right && Left && Down && Up) {
+//        heroCollidingState = true;
+//        _collidingObstacle = obst;
+//        break;
+//      }
+//    }
 
     if (!heroCollidingState) {
       for (final enemy in  Enemies().getEnemyList()) {

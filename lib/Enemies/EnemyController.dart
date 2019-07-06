@@ -28,7 +28,7 @@ class EnemyController extends FlareControls {
 
   void takeEnemyPunch(CharacterInfo enemy) {
     live--;
-    print("${_character.name} gets puch from ${enemy.name}, his live is $live");
+    print("${_character.name} ($live) gets punch from ${enemy.name} (${(enemy.flareActor.controller as EnemyController).live})");
     if (live == 0) {
       play("death"); //death
       Enemies().rip(_character);
@@ -38,20 +38,22 @@ class EnemyController extends FlareControls {
     hatedObjects.toList().forEach((obj) {
       if (obj.enemy == enemy) {
         hatedObject = obj;
-        obj.hatedLevel++;
+//        obj.hatedLevel++;
       }
     });
-
     hatedObjects.remove(hatedObject);
+    hatedObject.hatedLevel++;
     hatedObjects.add(hatedObject);
   }
 
   void update() {
-    if (live <= 0) return;
+    if (live <= 0) {
+      return;
+    }
 
     _adjustToTarget();
 
-    if (hatedObjects.isEmpty /*|| _target == null*/) {
+    if (hatedObjects.isEmpty || _target == null) {
       if (!standing) {
         standing = true;
         play("stand");
@@ -62,19 +64,19 @@ class EnemyController extends FlareControls {
     double widthOffset = 0;
     double heightOffset = 0;
 
-    if (hatedObjects.first.enemy == Globals().hero) {
+    if (_target.enemy == Globals().hero) {
       widthOffset = -Globals().heroWidth / 2;
       heightOffset = -Globals().heroHeight / 2;
     }
 
     double alfa = atan2(
-        hatedObjects.first.enemy.Y + heightOffset - _character.Y,
-        hatedObjects.first.enemy.X + widthOffset - _character.X);
+        _target.enemy.Y + heightOffset - _character.Y,
+        _target.enemy.X + widthOffset - _character.X);
     _character.angle = alfa + pi / 2;
 
     double dist =
-        pow(hatedObjects.first.enemy.X + widthOffset - _character.X, 2) +
-            pow(hatedObjects.first.enemy.Y + heightOffset - _character.Y, 2);
+        pow(_target.enemy.X + widthOffset - _character.X, 2) +
+            pow(_target.enemy.Y + heightOffset - _character.Y, 2);
 //    print (dist);
     if (dist > 4500) {
       Vec2D newPos = Vec2D.subtract(
@@ -88,8 +90,8 @@ class EnemyController extends FlareControls {
         _character.Y = newPos[1];
       }
     } else {
-      if (hatedObjects.first.enemy != Globals().hero) {
-        (hatedObjects.first.enemy.flareActor.controller as EnemyController)
+      if (_target.enemy != Globals().hero) {
+        (_target.enemy.flareActor.controller as EnemyController)
             .takeEnemyPunch(_character);
       }
     }
@@ -147,7 +149,7 @@ class EnemyController extends FlareControls {
   void _adjustToTarget() {
     if (!hatedQueueSet) {
       Enemies().getEnemyList().forEach((enemy) {
-        if (enemy == _character) return;
+        if (enemy == _character || enemy.familly == _character.familly) return;
         int level = 0;
         if (enemy.familly != _character.familly) level++;
         hatedObjects.add(HatedObject(enemy, level));
@@ -158,18 +160,19 @@ class EnemyController extends FlareControls {
     if (!hatedObjects.isEmpty) {
       if ((hatedObjects.first.enemy.flareActor.controller is EnemyController) &&
           (hatedObjects.first.enemy.flareActor.controller as EnemyController)
-                  .live <=
-              0) {
+                  .live <= 0) {
         hatedObjects.removeFirst();
       }
       if (!hatedObjects.isEmpty) {
         double smallestDist = double.maxFinite;
         hatedObjects.toList().forEach((obj) {
-          if (obj.hatedLevel == hatedObjects.first.hatedLevel) {
-            if (pow(obj.enemy.X - _character.X, 2) +
-                    pow(obj.enemy.Y - _character.Y, 2) <
-                smallestDist) {
+          if (obj.hatedLevel == hatedObjects.first.hatedLevel &&
+              (obj.enemy.flareActor.controller as EnemyController).live > 0) {
+            double newDist = pow(obj.enemy.X - _character.X, 2) +
+                pow(obj.enemy.Y - _character.Y, 2);
+            if (newDist < smallestDist) {
               _target = obj;
+              smallestDist = newDist;
             }
           }
         });

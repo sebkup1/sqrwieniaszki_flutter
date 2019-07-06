@@ -57,75 +57,75 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
 
     Enemies().addEnemy(name: "Antoni Macierewicz",
         X: -300, Y: 500, angle: 0, familly: Familly.Geje);
+//
+//    Enemies().addEnemy(name: "Pech",
+//        X: -200, Y: 200, angle: 200, familly: Familly.Legia);
+//
+//    Enemies().addEnemy(name: "Johnny Walker",
+//        X: 0, Y: 200, angle: 200, familly: Familly.Lanister);
+//
+//    Enemies().addEnemy(name: "Steve Rogers",
+//        X: 510, Y: 450, angle: 0, familly: Familly.Legia);
 
-    Enemies().addEnemy(name: "Pech",
-        X: -200, Y: 200, angle: 200, familly: Familly.Legia);
-
-    Enemies().addEnemy(name: "Johnny Walker",
-        X: 0, Y: 200, angle: 200, familly: Familly.Lanister);
-
-    Enemies().addEnemy(name: "Steve Rogers",
-        X: 510, Y: 450, angle: 0, familly: Familly.Legia);
-
-    Enemies().addEnemy(name: "Jorah Mormont",
-        X: -450, Y: -1100, angle: -100, familly: Familly.Ciapaci);
-
-    Enemies().addEnemy(name: "Antoni Macierewicz",
-        X: 800, Y: 10, angle: 0, familly: Familly.Ciapaci);
-
-    Enemies().addEnemy(name: "Sandor Clegane",
-        X: 600, Y: 1200, angle: 200, familly: Familly.Geje);
-
-    Enemies().addEnemy(name: "Johnny Walker",
-        X: 0, Y: 1200, angle: 200, familly: Familly.PiS);
-
-    Enemies().addEnemy(name: "Steve Rogers",
-        X: 310, Y: 50, angle: 0, familly: Familly.PiS);
-
-    Enemies().addEnemy(name: "Jorah Mormont",
-        X: -900, Y: -500, angle: -100, familly: Familly.Ciapaci);
-
-    Enemies().addEnemy(name: "Antoni Macierewicz",
-        X: 200, Y: 0, angle: 0, familly: Familly.PiS);
-
-    Enemies().addEnemy(name: "Sandor Clegane",
-        X: 200, Y: 1200, angle: 200, familly: Familly.Avengers);
-
-    Enemies().addEnemy(name: "Johnny Walker",
-        X: -150, Y: 1200, angle: 200, familly: Familly.PiS);
-
-    Enemies().addEnemy(name: "Steve Rogers",
-        X: 1310, Y: 150, angle: 0, familly: Familly.Lanister);
-
-    Enemies().addEnemy(name: "Jorah Mormont",
-        X: -1900, Y: -1500, angle: -100, familly: Familly.Legia);
-
-    Enemies().addEnemy(name: "Antoni Macierewicz",
-        X: 1200, Y: 1000, angle: 0, familly: Familly.Ciapaci);
-
-    Enemies().addEnemy(name: "Sandor Clegane",
-        X: 1200, Y: 1600, angle: 200, familly: Familly.Geje);
-
-    Enemies().addEnemy(name: "Johnny Walker",
-        X: -1150, Y: -1200, angle: 200, familly: Familly.Avengers);
-
-    Enemies().addEnemy(name: "Johnny Walker",
-        X: -1, Y: -10, angle: 200, familly: Familly.Lanister);
-
-    Enemies().addEnemy(name: "Jorah Mormont",
-        X: -1900, Y: -1500, angle: -100, familly: Familly.Legia);
-
-    Enemies().addEnemy(name: "Antoni Macierewicz",
-        X: 1200, Y: -1500, angle: 0, familly: Familly.Ciapaci);
-
-    Enemies().addEnemy(name: "Sandor Clegane",
-        X: 200, Y: -1500, angle: 200, familly: Familly.Geje);
-
-    Enemies().addEnemy(name: "Johnny Walker",
-        X: -1150, Y: 1200, angle: 200, familly: Familly.Avengers);
-
-    Enemies().addEnemy(name: "Johnny Walker",
-        X: -1, Y: -1077, angle: 200, familly: Familly.Lanister);
+//    Enemies().addEnemy(name: "Jorah Mormont",
+//        X: -450, Y: -1100, angle: -100, familly: Familly.Ciapaci);
+//
+//    Enemies().addEnemy(name: "Antoni Macierewicz",
+//        X: 800, Y: 10, angle: 0, familly: Familly.Ciapaci);
+//
+//    Enemies().addEnemy(name: "Sandor Clegane",
+//        X: 600, Y: 1200, angle: 200, familly: Familly.Geje);
+//
+//    Enemies().addEnemy(name: "Johnny Walker",
+//        X: 0, Y: 1200, angle: 200, familly: Familly.PiS);
+//
+//    Enemies().addEnemy(name: "Steve Rogers",
+//        X: 310, Y: 50, angle: 0, familly: Familly.PiS);
+//
+//    Enemies().addEnemy(name: "Jorah Mormont",
+//        X: -900, Y: -500, angle: -100, familly: Familly.Ciapaci);
+//
+//    Enemies().addEnemy(name: "Antoni Macierewicz",
+//        X: 200, Y: 0, angle: 0, familly: Familly.PiS);
+//
+//    Enemies().addEnemy(name: "Sandor Clegane",
+//        X: 200, Y: 1200, angle: 200, familly: Familly.Avengers);
+//
+//    Enemies().addEnemy(name: "Johnny Walker",
+//        X: -150, Y: 1200, angle: 200, familly: Familly.PiS);
+//
+//    Enemies().addEnemy(name: "Steve Rogers",
+//        X: 1310, Y: 150, angle: 0, familly: Familly.Lanister);
+//
+//    Enemies().addEnemy(name: "Jorah Mormont",
+//        X: -1900, Y: -1500, angle: -100, familly: Familly.Legia);
+//
+//    Enemies().addEnemy(name: "Antoni Macierewicz",
+//        X: 1200, Y: 1000, angle: 0, familly: Familly.Ciapaci);
+//
+//    Enemies().addEnemy(name: "Sandor Clegane",
+//        X: 1200, Y: 1600, angle: 200, familly: Familly.Geje);
+//
+//    Enemies().addEnemy(name: "Johnny Walker",
+//        X: -1150, Y: -1200, angle: 200, familly: Familly.Avengers);
+//
+//    Enemies().addEnemy(name: "Johnny Walker",
+//        X: -1, Y: -10, angle: 200, familly: Familly.Lanister);
+//
+//    Enemies().addEnemy(name: "Jorah Mormont",
+//        X: 900, Y: -1500, angle: -100, familly: Familly.Legia);
+//
+//    Enemies().addEnemy(name: "Antoni Macierewicz",
+//        X: 1200, Y: -1500, angle: 0, familly: Familly.Ciapaci);
+//
+//    Enemies().addEnemy(name: "Sandor Clegane",
+//        X: 200, Y: -1500, angle: 200, familly: Familly.Geje);
+//
+//    Enemies().addEnemy(name: "Johnny Walker",
+//        X: -1150, Y: 1200, angle: 200, familly: Familly.Avengers);
+//
+//    Enemies().addEnemy(name: "Johnny Walker",
+//        X: -1, Y: -1077, angle: 200, familly: Familly.Lanister);
 
 
 
