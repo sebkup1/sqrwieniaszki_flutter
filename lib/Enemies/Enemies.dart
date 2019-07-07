@@ -15,12 +15,15 @@ class Enemies {
 
   List<CharacterInfo> _aliveEnemiesList = new List<CharacterInfo>();
   List<CharacterInfo> _ripEemiesList = new List<CharacterInfo>();
+  List<CharacterInfo> all = new List<CharacterInfo>();
   List<Widget> widgets = List<Widget>();
+  Map<EnemyController, CharacterInfo> map = Map<EnemyController, CharacterInfo>();
 
   Widget drawEnemies() {
-    widgets.clear();
-    _ripEemiesList.forEach(_addToStack);
-    _aliveEnemiesList.forEach(_addToStack);
+    widgets = List<Widget>();
+    all.forEach((en) {if ((en.flareActor.controller as EnemyController).live <= 0){_addToStack(en);}});
+    all.forEach((en) {if ((en.flareActor.controller as EnemyController).live > 0){_addToStack(en);}});
+//    _aliveEnemiesList.forEach(_addToStack);
 
     return Stack(children: widgets);
   }
@@ -47,8 +50,7 @@ class Enemies {
       double Y: 0,
       String name: "Unknown",
       Familly familly: Familly.Avengers}) {
-//    CharacterInfo newGay;
-    EnemyController contr = EnemyController();
+    EnemyController contr = EnemyController(name);
     CharacterInfo newGay = CharacterInfo(
         angle,
         X,
@@ -60,26 +62,40 @@ class Enemies {
         ),
         familly);
     contr.character = newGay;
-    _aliveEnemiesList.add(newGay);
+
+    all.add(newGay);
   }
 
   List<CharacterInfo> getEnemyList() {
-    return _aliveEnemiesList;
+    List<CharacterInfo> toRet = List<CharacterInfo>();
+    all.forEach((en) {
+      if((en.flareActor.controller as EnemyController).live > 0)
+        toRet.add(en);
+    });
+    return toRet;
+//    return _aliveEnemiesList;
   }
 
   List<CharacterInfo> getCorpsList() {
-    return _ripEemiesList;
+    List<CharacterInfo> toRet = List<CharacterInfo>();
+    all.forEach((en) {
+      if((en.flareActor.controller as EnemyController).live <= 0)
+        toRet.add(en);
+    });
+    return toRet;
   }
 
   List<CharacterInfo> getAll() {
-    List<CharacterInfo> all = List<CharacterInfo>();
-    all.addAll(_ripEemiesList);
-    all.addAll(_aliveEnemiesList);
+//    List<CharacterInfo> all = List<CharacterInfo>();
+//    all.clear();
+//    all.addAll(_ripEemiesList);
+//    all.addAll(_aliveEnemiesList);
     return all;
   }
 
-  void rip(CharacterInfo corps) {
-    CharacterInfo temp = corps;
-    if (_aliveEnemiesList.remove(corps)) _ripEemiesList.add(temp);
-  }
+//  void rip(CharacterInfo corps) {
+////    CharacterInfo temp = corps;
+////    _aliveEnemiesList.remove(corps);
+////    _ripEemiesList.add(temp);
+//  }
 }

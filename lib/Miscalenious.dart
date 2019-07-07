@@ -13,7 +13,7 @@ enum GestCommand {
 }
 
 enum Familly {
-  PiS, Geje, Legia, Ciapaci, Lanister, Avengers
+  PiS, Geje, Legia, Ciapaci, Lanister, Avengers, Totalna_Opozycja
 }
 
 enum CollisionDirection {

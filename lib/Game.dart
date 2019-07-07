@@ -64,13 +64,13 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
 //    Enemies().addEnemy(name: "Johnny Walker",
 //        X: 0, Y: 200, angle: 200, familly: Familly.Lanister);
 //
-//    Enemies().addEnemy(name: "Steve Rogers",
+//    Enemies().addEnemy(name: "Grzegorz Rasiak",
 //        X: 510, Y: 450, angle: 0, familly: Familly.Legia);
-
-//    Enemies().addEnemy(name: "Jorah Mormont",
+//
+//    Enemies().addEnemy(name: "Tony Stark",
 //        X: -450, Y: -1100, angle: -100, familly: Familly.Ciapaci);
 //
-//    Enemies().addEnemy(name: "Antoni Macierewicz",
+//    Enemies().addEnemy(name: "Beata Szydlo",
 //        X: 800, Y: 10, angle: 0, familly: Familly.Ciapaci);
 //
 //    Enemies().addEnemy(name: "Sandor Clegane",
@@ -79,10 +79,10 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
 //    Enemies().addEnemy(name: "Johnny Walker",
 //        X: 0, Y: 1200, angle: 200, familly: Familly.PiS);
 //
-//    Enemies().addEnemy(name: "Steve Rogers",
+//    Enemies().addEnemy(name: "Jaroslaw Kaczynski",
 //        X: 310, Y: 50, angle: 0, familly: Familly.PiS);
 //
-//    Enemies().addEnemy(name: "Jorah Mormont",
+//    Enemies().addEnemy(name: "Rob Stark",
 //        X: -900, Y: -500, angle: -100, familly: Familly.Ciapaci);
 //
 //    Enemies().addEnemy(name: "Antoni Macierewicz",
@@ -94,10 +94,10 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
 //    Enemies().addEnemy(name: "Johnny Walker",
 //        X: -150, Y: 1200, angle: 200, familly: Familly.PiS);
 //
-//    Enemies().addEnemy(name: "Steve Rogers",
+//    Enemies().addEnemy(name: "Mariusz Blaszczak",
 //        X: 1310, Y: 150, angle: 0, familly: Familly.Lanister);
 //
-//    Enemies().addEnemy(name: "Jorah Mormont",
+//    Enemies().addEnemy(name: "Ned Stark",
 //        X: -1900, Y: -1500, angle: -100, familly: Familly.Legia);
 //
 //    Enemies().addEnemy(name: "Antoni Macierewicz",
@@ -112,7 +112,7 @@ class GameState extends State<Game> with SingleTickerProviderStateMixin {
 //    Enemies().addEnemy(name: "Johnny Walker",
 //        X: -1, Y: -10, angle: 200, familly: Familly.Lanister);
 //
-//    Enemies().addEnemy(name: "Jorah Mormont",
+//    Enemies().addEnemy(name: "Jon Snow",
 //        X: 900, Y: -1500, angle: -100, familly: Familly.Legia);
 //
 //    Enemies().addEnemy(name: "Antoni Macierewicz",

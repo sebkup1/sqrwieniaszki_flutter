@@ -154,7 +154,7 @@ class MapControls extends FlareControls {
 
     if (_stopped || heroCollidingState) {
 
-      Enemies().getAll().forEach((enemy) {
+      Enemies().getEnemyList().forEach((enemy) {
         (enemy.flareActor.controller as EnemyController).update();
       });
 
@@ -203,7 +203,7 @@ class MapControls extends FlareControls {
       }
     }
 
-    Enemies().getAll().forEach((enemy) {
+    Enemies().getEnemyList().forEach((enemy) {
       (enemy.flareActor.controller as EnemyController).update();
     });
     _gameState.updateState();

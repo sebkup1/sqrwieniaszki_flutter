@@ -1,41 +1,31 @@
-import 'dart:math';
 
-import 'package:collection/collection.dart';
-import 'package:flare_dart/math/mat2d.dart';
-import 'package:flare_dart/math/vec2d.dart';
-import 'package:flare_flutter/flare.dart';
-import 'package:flare_flutter/flare_controls.dart';
 
-import '../Miscalenious.dart';
-import 'Enemies.dart';
-
-class EnemyController extends FlareControls {
+class CharacterBahaviourController {
   CharacterInfo _character;
-  HeapPriorityQueue<HatedObject> _hatedObjects;
-  bool _hatedQueueSet = false;
+  HeapPriorityQueue<HatedObject> hatedObjects;
+  bool hatedQueueSet = false;
   int live = 5;
   HatedObject _target = null;
 
-  bool _standing = false;
-  bool _death = false;
-  String _characterName;
+  bool standing = false;
+  bool death = false;
 
   set character(CharacterInfo character) {
     _character = character;
   }
 
-  EnemyController(this._characterName) {
-    _hatedObjects = HeapPriorityQueue<HatedObject>();
+  EnemyAnimController() {
+    hatedObjects = HeapPriorityQueue<HatedObject>();
   }
 
   void takeEnemyPunch(CharacterInfo enemy) {
     live--;
     print(
-        "${_character.name} ${_characterName} ($live) gets punch from ${enemy.name} (${(enemy.flareActor.controller as EnemyController).live})");
+        "${_character.name} ($live) gets punch from ${enemy.name} (${(enemy.flareActor.controller as EnemyAnimController).live})");
     if (live <= 0) {
       this.play("death"); //death
 //      Enemies().rip(_character);
-      _death = true;
+      death = true;
       return;
     }
 //    HatedObject hatedObject;
@@ -51,21 +41,19 @@ class EnemyController extends FlareControls {
   }
 
   void update() {
-//    print ("${_character.name} ($live)");
+    print ("${_character.name} ($live)");
     if (live <= 0) {
-//      this.play("death");
-      _death = true;
       return;
     }
 
     _adjustToTarget();
 
-    if (_hatedObjects.isEmpty || _target == null) {
-//      print(
-//          "${pow(_character.X - Globals().hero.X, 2) + pow(_character.Y - Globals().hero.Y, 2)}");
-      if (!_standing) {
-        _standing = true;
-//        this.play("stand");
+    if (hatedObjects.isEmpty || _target == null) {
+      print(
+          "${pow(_character.X - Globals().hero.X, 2) + pow(_character.Y - Globals().hero.Y, 2)}");
+      if (!standing) {
+        standing = true;
+        play("stand");
         print("${_character.name} has nothing to do");
       }
       return;
@@ -97,7 +85,7 @@ class EnemyController extends FlareControls {
         _character.Y = newPos[1];
       }
     } else {
-      (_target.enemy.flareActor.controller as EnemyController)
+      (_target.enemy.flareActor.controller as EnemyAnimController)
           .takeEnemyPunch(_character);
     }
   }
@@ -106,9 +94,6 @@ class EnemyController extends FlareControls {
   bool advance(FlutterActorArtboard artboard, double elapsed) {
     super.advance(artboard, elapsed);
 //    _update();
-    if(_standing) play("stand");
-    else if(_death) play("death");
-    else play("walk");
     return true;
   }
 
@@ -124,7 +109,7 @@ class EnemyController extends FlareControls {
   bool withOtherEnemyCollizion(Vec2D newPos) {
     for (CharacterInfo enemy in Enemies().getEnemyList()) {
       if (enemy == _character ||
-          (enemy.flareActor.controller as EnemyController).live <= 0) {
+          (enemy.flareActor.controller as EnemyAnimController).live <= 0) {
         continue;
       }
       double newDist =
@@ -153,22 +138,22 @@ class EnemyController extends FlareControls {
   }
 
   void _adjustToTarget() {
-    _hatedObjects.clear();
+    hatedObjects.clear();
     Enemies().getAll().forEach((enemy) {
       if (enemy == _character || enemy.familly == _character.familly ||
-          (enemy.flareActor.controller as EnemyController).live <=0) return;
+          (enemy.flareActor.controller as EnemyAnimController).live <=0) return;
       int level = 0;
       if (enemy.familly != _character.familly) level++;
-      _hatedObjects.add(HatedObject(enemy, level));
+      hatedObjects.add(HatedObject(enemy, level));
     });
 
-    if (!_hatedObjects.isEmpty) {
-      _target = _hatedObjects.first;
+    if (!hatedObjects.isEmpty) {
+      _target = hatedObjects.first;
       double smallestDist = pow(_target.enemy.X - _character.X, 2) +
           pow(_target.enemy.Y - _character.Y, 2);
-      _hatedObjects.toList().forEach((obj) {
-        if (obj.hatedLevel == _hatedObjects.first.hatedLevel &&
-            (obj.enemy.flareActor.controller as EnemyController).live > 0) {
+      hatedObjects.toList().forEach((obj) {
+        if (obj.hatedLevel == hatedObjects.first.hatedLevel &&
+            (obj.enemy.flareActor.controller as EnemyAnimController).live > 0) {
           double newDist = pow(obj.enemy.X - _character.X, 2) +
               pow(obj.enemy.Y - _character.Y, 2);
           if (newDist < smallestDist) {
