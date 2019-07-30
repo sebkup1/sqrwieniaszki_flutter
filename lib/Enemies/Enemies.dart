@@ -21,9 +21,10 @@ class Enemies {
 
   Widget drawEnemies() {
     widgets = List<Widget>();
-    all.forEach((en) {if ((en.flareActor.controller as EnemyController).live <= 0){_addToStack(en);}});
-    all.forEach((en) {if ((en.flareActor.controller as EnemyController).live > 0){_addToStack(en);}});
-//    _aliveEnemiesList.forEach(_addToStack);
+//    all.forEach((en) {if ((en.flareActor.controller as EnemyController).live <= 0){_addToStack(en);}});
+//    all.forEach((en) {if ((en.flareActor.controller as EnemyController).live > 0){_addToStack(en);}});
+//    _ripEemiesList.forEach(_addToStack);
+    all.forEach(_addToStack);
 
     return Stack(children: widgets);
   }
@@ -64,6 +65,7 @@ class Enemies {
     contr.character = newGay;
 
     all.add(newGay);
+    _aliveEnemiesList.add(newGay);
   }
 
   List<CharacterInfo> getEnemyList() {
@@ -73,7 +75,6 @@ class Enemies {
         toRet.add(en);
     });
     return toRet;
-//    return _aliveEnemiesList;
   }
 
   List<CharacterInfo> getCorpsList() {
@@ -86,16 +87,13 @@ class Enemies {
   }
 
   List<CharacterInfo> getAll() {
-//    List<CharacterInfo> all = List<CharacterInfo>();
-//    all.clear();
-//    all.addAll(_ripEemiesList);
-//    all.addAll(_aliveEnemiesList);
     return all;
   }
 
-//  void rip(CharacterInfo corps) {
-////    CharacterInfo temp = corps;
-////    _aliveEnemiesList.remove(corps);
-////    _ripEemiesList.add(temp);
-//  }
+  void rip(CharacterInfo corps) {
+    CharacterInfo temp = corps;
+    if(_aliveEnemiesList.remove(corps)){
+      _ripEemiesList.add(temp);
+    }
+  }
 }

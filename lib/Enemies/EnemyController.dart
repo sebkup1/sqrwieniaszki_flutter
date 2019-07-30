@@ -5,11 +5,12 @@ import 'package:flare_dart/math/mat2d.dart';
 import 'package:flare_dart/math/vec2d.dart';
 import 'package:flare_flutter/flare.dart';
 import 'package:flare_flutter/flare_controls.dart';
+import 'package:sqrwieniaszki_flutter/Interactions/PunchTaker.dart';
 
 import '../Miscalenious.dart';
 import 'Enemies.dart';
 
-class EnemyController extends FlareControls {
+class EnemyController extends FlareControls with PunchTaker {
   CharacterInfo _character;
   HeapPriorityQueue<HatedObject> _hatedObjects;
   bool _hatedQueueSet = false;
@@ -28,16 +29,18 @@ class EnemyController extends FlareControls {
     _hatedObjects = HeapPriorityQueue<HatedObject>();
   }
 
+  @override
   void takeEnemyPunch(CharacterInfo enemy) {
     live--;
     print(
         "${_character.name} ${_characterName} ($live) gets punch from ${enemy.name} (${(enemy.flareActor.controller as EnemyController).live})");
     if (live <= 0) {
       this.play("death"); //death
-//      Enemies().rip(_character);
+      Enemies().rip(_character);
       _death = true;
       return;
     }
+
 //    HatedObject hatedObject;
 //    hatedObjects.toList().forEach((obj) {
 //      if (obj.enemy == enemy) {
@@ -65,7 +68,7 @@ class EnemyController extends FlareControls {
 //          "${pow(_character.X - Globals().hero.X, 2) + pow(_character.Y - Globals().hero.Y, 2)}");
       if (!_standing) {
         _standing = true;
-//        this.play("stand");
+        this.play("stand");
         print("${_character.name} has nothing to do");
       }
       return;
@@ -104,12 +107,11 @@ class EnemyController extends FlareControls {
 
   @override
   bool advance(FlutterActorArtboard artboard, double elapsed) {
-    super.advance(artboard, elapsed);
+    if(artboard != null) {
+      super.advance(artboard, elapsed);
 //    _update();
-    if(_standing) play("stand");
-    else if(_death) play("death");
-    else play("walk");
-    return true;
+      return true;
+    } else return false;
   }
 
   @override
